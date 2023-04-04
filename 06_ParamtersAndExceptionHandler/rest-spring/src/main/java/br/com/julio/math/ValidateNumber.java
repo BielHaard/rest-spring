@@ -1,18 +1,14 @@
-package br.com.julio.controller;
+package br.com.julio.math;
+public class ValidateNumber {
 
-import org.springframework.stereotype.Controller;
-
-@Controller
-public class ValidateNumberController {
-
-    double convertToDouble(String strNumber) {
+    public static Double convertToDouble(String strNumber) {
         if (strNumber == null) return 0D;
         String number = strNumber.replaceAll(",", ".");
         if (isNumeric(number)) return Double.parseDouble(number);
         return 0D;
     }
 
-    boolean isNumeric(String strNumber) {
+    public static Boolean isNumeric(String strNumber) {
         if (strNumber == null) return false;
         String number =  strNumber.replaceAll(",", ".");
         return number.matches("[-+]?[0-9]*\\.?[0-9]+");

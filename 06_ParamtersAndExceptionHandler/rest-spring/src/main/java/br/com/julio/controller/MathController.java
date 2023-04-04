@@ -1,6 +1,8 @@
 package br.com.julio.controller;
 
+import br.com.julio.math.ValidateNumber;
 import br.com.julio.exceptions.UnsupportedMathOperationException;
+import br.com.julio.math.SimpleMath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +13,7 @@ import java.lang.*;
 @RestController
 public class MathController {
 
-	private final ValidateNumberController validateNumberController;
-
-	@Autowired
-	public MathController(ValidateNumberController validateNumberController) {
-		this.validateNumberController = validateNumberController;
-	}
+	private SimpleMath math = new SimpleMath();
 
 	private static final AtomicLong counter = new AtomicLong();
 
@@ -27,10 +24,10 @@ public class MathController {
 			@PathVariable(value = "numberOne") String numberOne,
 			@PathVariable(value = "numberTwo") String numberTwo
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numberOne) || !validateNumberController.isNumeric(numberTwo)) {
+		if (!ValidateNumber.isNumeric(numberOne) || !ValidateNumber.isNumeric(numberTwo)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return validateNumberController.convertToDouble(numberOne) + validateNumberController.convertToDouble(numberTwo);
+		return math.sum(ValidateNumber.convertToDouble(numberOne), ValidateNumber.convertToDouble(numberTwo));
 	}
 
 	@RequestMapping(value = "/subtract/{numberOne}/{numberTwo}",
@@ -39,10 +36,10 @@ public class MathController {
 			@PathVariable(value = "numberOne") String numberOne,
 			@PathVariable(value = "numberTwo") String numberTwo
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numberOne) || !validateNumberController.isNumeric(numberTwo)) {
+		if (!ValidateNumber.isNumeric(numberOne) || !ValidateNumber.isNumeric(numberTwo)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return validateNumberController.convertToDouble(numberOne) - validateNumberController.convertToDouble(numberTwo);
+		return math.subtract(ValidateNumber.convertToDouble(numberOne), ValidateNumber.convertToDouble(numberTwo));
 	}
 
 	@RequestMapping(value = "/multiply/{numberOne}/{numberTwo}",
@@ -51,10 +48,10 @@ public class MathController {
 			@PathVariable(value = "numberOne") String numberOne,
 			@PathVariable(value = "numberTwo") String numberTwo
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numberOne) || !validateNumberController.isNumeric(numberTwo)) {
+		if (!ValidateNumber.isNumeric(numberOne) || !ValidateNumber.isNumeric(numberTwo)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return validateNumberController.convertToDouble(numberOne) * validateNumberController.convertToDouble(numberTwo);
+		return math.multiply(ValidateNumber.convertToDouble(numberOne), ValidateNumber.convertToDouble(numberTwo));
 	}
 
 	@RequestMapping(value = "/division/{numberOne}/{numberTwo}",
@@ -63,10 +60,10 @@ public class MathController {
 			@PathVariable(value = "numberOne") String numberOne,
 			@PathVariable(value = "numberTwo") String numberTwo
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numberOne) || !validateNumberController.isNumeric(numberTwo)) {
+		if (!ValidateNumber.isNumeric(numberOne) || !ValidateNumber.isNumeric(numberTwo)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return validateNumberController.convertToDouble(numberOne) / validateNumberController.convertToDouble(numberTwo);
+		return math.division(ValidateNumber.convertToDouble(numberOne), ValidateNumber.convertToDouble(numberTwo));
 	}
 
 	@RequestMapping(value = "/mean/{numberOne}/{numberTwo}",
@@ -75,10 +72,10 @@ public class MathController {
 			@PathVariable(value = "numberOne") String numberOne,
 			@PathVariable(value = "numberTwo") String numberTwo
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numberOne) || !validateNumberController.isNumeric(numberTwo)) {
+		if (!ValidateNumber.isNumeric(numberOne) || !ValidateNumber.isNumeric(numberTwo)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return (validateNumberController.convertToDouble(numberOne) / validateNumberController.convertToDouble(numberTwo)) / 2;
+		return math.mean(ValidateNumber.convertToDouble(numberOne), ValidateNumber.convertToDouble(numberTwo));
 	}
 
 
@@ -87,10 +84,10 @@ public class MathController {
 	public double sqrt(
 			@PathVariable(value = "numbersqrt") String numbersqrt
 	) throws  Exception{
-		if (!validateNumberController.isNumeric(numbersqrt)) {
+		if (!ValidateNumber.isNumeric(numbersqrt)) {
 			throw new UnsupportedMathOperationException("Please set a numeric value!");
 		}
-		return Math.sqrt(validateNumberController.convertToDouble(numbersqrt));
+		return math.sqrt(ValidateNumber.convertToDouble(numbersqrt));
 	}
 
 
