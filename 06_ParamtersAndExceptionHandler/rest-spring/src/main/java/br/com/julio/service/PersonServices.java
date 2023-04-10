@@ -4,11 +4,9 @@ import br.com.julio.exceptions.ResourceNotFoudException;
 import br.com.julio.model.Person;
 import br.com.julio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
@@ -36,7 +34,7 @@ public class PersonServices {
     }
 
     public Person  update(Person person) {
-        logger.info("Creating one Person");
+        logger.info("updating one Person");
         Person entity = repository.findById(person.getId())
                 .orElseThrow(() -> new ResourceNotFoudException(" No records found for this ID!"));
 
@@ -48,9 +46,12 @@ public class PersonServices {
         return repository.save(entity);
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
 
         logger.info("Deleting a unique person in database");
 
+        Person entity  =  repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoudException("No records found for this ID!"));
+        repository.delete(entity);
     }
 }
