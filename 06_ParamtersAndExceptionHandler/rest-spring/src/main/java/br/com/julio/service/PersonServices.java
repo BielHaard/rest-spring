@@ -1,11 +1,14 @@
 package br.com.julio.service;
 
 import br.com.julio.exceptions.ResourceNotFoudException;
+
+import br.com.julio.mapper.DozerMapper;
 import br.com.julio.model.Person;
 import br.com.julio.repositories.PersonRepository;
+import br.com.julio.vo.v1.PersonVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,40 +20,42 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    public List<Person> findAll() {
+    public List<PersonVO> findAll() {
        logger.info("Finding all peolpe");
-        return repository.findAll();
+        return DozerMapper.parseListObjects(repository.findAll(), PersonVO.class);
     }
 
-    public Person findById(Long id) {
+    public PersonVO findById(Long id) {
         logger.info("Finding one Person!");
-        return repository.findById(id)
+        var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoudException(" No records found for this ID!"));
+        return DozerMapper.parseObject(entity, PersonVO.class);
     }
 
-    public Person  create(Person person) {
+    public PersonVO  create(PersonVO person) {
         logger.info("Creating one Person");
-        return repository.save(person);
+        var entity = DozerMapper.parseObject(person, Person.class);
+        return DozerMapper.parseObject(repository.save(entity), PersonVO.class);
     }
 
-    public Person  update(Person person) {
+    public PersonVO  update(PersonVO person) {
         logger.info("updating one Person");
-        Person entity = repository.findById(person.getId())
+        var entity = repository.findById(person.getId())
                 .orElseThrow(() -> new ResourceNotFoudException(" No records found for this ID!"));
 
           entity.setFirstName(person.getFirstName());
           entity.setLastName(person.getLastName());
-          entity.setAdress(person.getAdress());
+          entity.setAddress(person.getAddress());
           entity.setGender(person.getGender());
 
-        return repository.save(entity);
+        return DozerMapper.parseObject(repository.save(entity), PersonVO.class);
     }
 
     public void delete(Long id) {
 
         logger.info("Deleting a unique person in database");
 
-        Person entity  =  repository.findById(id)
+        var entity  =  repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoudException("No records found for this ID!"));
         repository.delete(entity);
     }
